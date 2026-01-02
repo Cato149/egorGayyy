@@ -22,12 +22,6 @@ def parse_tickers(raw_value: str) -> List[str]:
 @lru_cache(maxsize=64)
 def fetch_prices(ticker: str, start: str, end: str) -> pd.DataFrame:
     data = yf.download(ticker, start=start, end=end, auto_adjust=False, progress=False)
-    if isinstance(data.columns, pd.MultiIndex):
-        data = data.copy()
-        data.columns = [
-            "_".join([str(level) for level in levels if level]).strip()
-            for levels in data.columns.to_list()
-        ]
     data = data.rename(columns=str.title)
     data = data.dropna()
     return data
